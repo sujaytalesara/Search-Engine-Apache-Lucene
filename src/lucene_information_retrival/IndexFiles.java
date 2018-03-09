@@ -53,51 +53,56 @@ public class IndexFiles
   public static void main(String[] args) 
   {
     
-    String indexPath = "/home/sujay/information_retrival/cran/index"; // Location where index files will be saved
-    String docsPath = "/home/sujay/information_retrival/cran/data"; // data location
-    
-    boolean create = true;
-   
-    final Path docDir = Paths.get(docsPath);
-    if (!Files.isReadable(docDir))
-    {
-      System.out.println("Document directory '" +docDir.toAbsolutePath()+ "' does not exist or is not readable, please check the path");
-      System.exit(1);
-    }
-    
-    Date start = new Date();
-    try {
-      System.out.println("Indexing to directory '" + indexPath + "'...");
-
-      Directory dir = FSDirectory.open(Paths.get(indexPath));
-      Analyzer analyzer = new StandardAnalyzer(); // Declaring Analyzer 
-      IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
-
-      if (create) {
-        // Create a new index in the directory, removing any
-        // previously indexed documents:
-        iwc.setOpenMode(OpenMode.CREATE);
-      } else {
-        // Add new documents to an existing index:
-        iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
-      }
-
-      IndexWriter writer = new IndexWriter(dir, iwc);
-      indexDocs(writer, docDir);
-      writer.close();
-
-      Date end = new Date();
-      System.out.println(end.getTime() - start.getTime() + " total milliseconds");
-
-    } catch (IOException e)
-    {
-      System.out.println(" caught a " + e.getClass() +
-       "\n with message: " + e.getMessage());
-    }
-    SearchFiles objSearchFiles = new SearchFiles();
-    objSearchFiles.SearchFilesCall();
+	  IndexFiles objIndexFiles = new IndexFiles();
+	  objIndexFiles.indexcall();
   }
 
+  public void indexcall() 
+  {
+	  String indexPath = "../lucene/src/cran/index"; // Location where index files will be saved
+	  String docsPath = "../lucene/src/cran/data"; // data location
+	    
+	    boolean create = true;
+	   
+	    final Path docDir = Paths.get(docsPath);
+	    if (!Files.isReadable(docDir))
+	    {
+	      System.out.println("Document directory '" +docDir.toAbsolutePath()+ "' does not exist or is not readable, please check the path");
+	      System.exit(1);
+	    }
+	    
+	    Date start = new Date();
+	    try {
+	      System.out.println("Indexing to directory '" + indexPath + "'...");
+
+	      Directory dir = FSDirectory.open(Paths.get(indexPath));
+	      Analyzer analyzer = new StandardAnalyzer(); // Declaring Analyzer 
+	      IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
+
+/*	      if (create) {
+	        iwc.setOpenMode(OpenMode.CREATE);
+	      } else {
+	        iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
+	      }
+*/
+	      IndexWriter writer = new IndexWriter(dir, iwc);
+	      indexDocs(writer, docDir);
+	      writer.close();
+
+	      Date end = new Date();
+	      System.out.println(end.getTime() - start.getTime() + " total milliseconds");
+
+	    } 
+	    catch (IOException e)
+	    {
+	      System.out.println(" caught a " + e.getClass() +
+	       "\n with message: " + e.getMessage());
+	    }
+	    
+	    SearchFiles objSearchFiles = new SearchFiles();
+	    objSearchFiles.SearchFilesCall();
+  }
+  
   
   static void indexDocs(final IndexWriter writer, Path path) throws IOException {
 	    if (Files.isDirectory(path)) {
@@ -139,10 +144,7 @@ public class IndexFiles
     	  
     	  String[] result = content.split(".A|.T|.B|.W");
     	  doc.add(pathField);
-    	  //result[0] = result[0];
-    	  //System.out.print( result[0] + "**" + result[0].length());
-    	  //int a = result[0].length();
-    	  
+  	  
     	  
     	  doc.add(new TextField("DocNumber",result[0].trim(), Field.Store.YES));
     	  doc.add(new TextField("title", result[1],Field.Store.YES));

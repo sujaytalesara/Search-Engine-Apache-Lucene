@@ -45,9 +45,9 @@ import org.apache.lucene.store.FSDirectory;
 /** Simple command-line based search demo. */
 public class SearchFiles 
 {
-	private static String index = "/lucene/cran/index";
-	private static String queryLocation = "/lucene//cran.qry";
-	private String cranrel = "/lucene/cran/cranqrel";
+	private static String index = "../lucene/src/cran/index";
+	private static String queryLocation = "../lucene/src/cran/Query/cran.qry";
+	private String cranrel = "../lucene/src/cran/cranqrel";
 	
 	public IndexSearcher searcher;
 	private Analyzer analyzer;
@@ -73,10 +73,14 @@ public class SearchFiles
 	  try 
 	  {
 		  objSearchFiles.indexSearcher(index,queryLocation,field,hitsPerPage);
+		  System.out.println("Execution Completed");
 
 	  }
 	  catch(Exception e)
-	  {}
+	  {
+		  System.out.println(e);
+		  e.printStackTrace();
+	  }
   }
   
   
@@ -121,6 +125,7 @@ public class SearchFiles
 	  catch(Exception e) 	
 	  {
 		  System.out.println(e);
+		  e.printStackTrace();
 	  }
 
   }
@@ -145,6 +150,8 @@ public class SearchFiles
      
   public void searchQueryBM25(QueryParser parser) throws Exception
   {
+	  try
+	  { 
 	  PrintWriter writer = new PrintWriter("BM25Result.txt", "UTF-8");
 
 	  for(int queryID:queryMap.keySet())
@@ -155,6 +162,11 @@ public class SearchFiles
 		  resultsBM25 = searcher.search(query, hitsPerPage);
 		  hitsBM25 = resultsBM25.scoreDocs; // BM25
 		  calculateTrecResult(writer,searcher,hitsBM25,queryID);
+	  }
+	  }
+	  catch(Exception e)
+	  {
+		  e.printStackTrace();
 	  }
 	}
   
@@ -199,7 +211,8 @@ public class SearchFiles
         writer.close();
     }
   }
-    
+  
+  /*
   public void calculatePrecisionRecall(TopDocs results,ScoreDoc[] hits)
   {
 		 int Scores = 0;
@@ -232,5 +245,6 @@ public class SearchFiles
 	   //System.out.println(recallCount +"**********************"+ Recall);
   }
 
+  */
 	
 }
